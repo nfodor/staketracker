@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-import { StakeTracker } from './models/StakeTracker';
+import { ColdStart } from './models/ColdStart';
 import { Logger } from './utils/logger';
 
 const logger = new Logger('Main');
 
 async function main() {
   try {
-    logger.info('Starting Stake Tracker...');
+    logger.info('Starting ColdStart...');
     
-    const tracker = new StakeTracker();
-    await tracker.initialize();
+    const coldstart = new ColdStart();
+    await coldstart.initialize();
     
-    logger.info('Stake Tracker initialized successfully');
+    logger.info('ColdStart initialized successfully');
   } catch (error) {
-    logger.error('Failed to start Stake Tracker:', error);
+    logger.error('Failed to start ColdStart:', error);
     process.exit(1);
   }
 }
@@ -23,4 +23,4 @@ if (require.main === module) {
   main();
 }
 
-export { StakeTracker };
+export { ColdStart };

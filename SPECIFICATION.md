@@ -1,8 +1,8 @@
-# StakeTracker: Decentralized Contribution & Equity Tracking System
+# ColdStart: Decentralized Contribution & Equity Tracking System
 
 ## General Purpose & Problem Statement
 
-StakeTracker addresses the fundamental challenge of fairly rewarding early-stage contributors to projects before formal business structures, funding, or legal frameworks are established. The core problem is:
+ColdStart addresses the fundamental challenge of fairly rewarding early-stage contributors to projects before formal business structures, funding, or legal frameworks are established. The core problem is:
 
 **"How do you fairly track, allocate, and eventually distribute value to contributors in pre-formal projects where traditional equity/compensation structures don't yet exist?"**
 
@@ -30,7 +30,7 @@ The ultimate goal is to create enough measurable value through trackable collect
 
 ## Overview
 
-StakeTracker is a system designed to track and record contributions to projects in an immutable, accountable way. It serves as a pre-incorporation/pre-funding equity management system where early contributors can accumulate verifiable stakes in projects that can later be converted to formal equity, shares, or monetary compensation.
+ColdStart is a system designed to track and record contributions to projects in an immutable, accountable way. It serves as a pre-incorporation/pre-funding equity management system where early contributors can accumulate verifiable stakes in projects that can later be converted to formal equity, shares, or monetary compensation.
 
 ## Core Concept
 
@@ -107,6 +107,15 @@ StakeTracker is a system designed to track and record contributions to projects 
 - **Stakeholder Management Dashboard**: Comprehensive view of all project participants, roles, and stakes
 - **Terms Evolution Tracking**: Historical record of any changes to project terms
 - **Acceptance Confirmation**: Explicit agreement required for all compensation conversion rules
+
+### 10. MCP Legal Guidance & Compliance System
+- **Legal Footprint Analysis**: Automatic detection of party jurisdictions and applicable regulations
+- **Real-Time Compliance Checking**: MCP-powered analysis of project structure against local laws
+- **Regulatory Impact Assessment**: Proactive identification of securities law, employment law, and tax implications
+- **Compliance Audit Readiness**: Automated preparation of documentation for regulatory reviews
+- **Legal Recommendation Engine**: Context-aware suggestions for structure optimization
+- **Multi-Jurisdiction Support**: Handle cross-border projects with complex regulatory landscapes
+- **Risk Mitigation Guidance**: Specific recommendations to reduce legal exposure
 
 ## Anti-Inflationary Mechanics
 
@@ -222,7 +231,7 @@ until all historical debt ($10,000) is fully paid.
 - Platform-controlled relationship
 - No team building or delegation
 
-### StakeTracker's Unique Positioning
+### ColdStart's Unique Positioning
 
 #### **Key Differentiators:**
 
@@ -265,7 +274,7 @@ until all historical debt ($10,000) is fully paid.
 
 ### Competitive Advantages
 
-StakeTracker's design addresses these gaps by providing:
+ColdStart's design addresses these gaps by providing:
 - **Simplicity**: Email-based invitations, web interface, no blockchain knowledge required
 - **Flexibility**: Any contribution type, any value unit, any project structure  
 - **Growth Incentives**: Anti-inflationary and relay systems reward network building
@@ -397,6 +406,8 @@ StakeTracker's design addresses these gaps by providing:
 - Legal template generation for formal conversion
 - Dispute resolution mechanisms
 - Enhanced audit trails and compliance reporting
+- MCP integration for automated legal guidance and compliance checking
+- Multi-jurisdiction regulatory analysis and recommendations
 
 #### **Success Criteria**:
 - Multiple value units work seamlessly
@@ -578,6 +589,27 @@ interface Project {
   
   // Terms Evolution
   termsHistory: ProjectTermsChange[];
+  
+  // MCP Legal Integration
+  legalCompliance: {
+    jurisdictionsInvolved: string[]; // ["US", "EU", "CA", etc.]
+    complianceStatus: 'compliant' | 'warning' | 'non-compliant' | 'unknown';
+    lastLegalReview: Date;
+    mcpRecommendations: MCPLegalRecommendation[];
+    regulatoryFlags: {
+      securitiesLaw: boolean;
+      employmentLaw: boolean;
+      taxImplications: boolean;
+      dataPrivacy: boolean;
+      crossBorder: boolean;
+    };
+    auditReadiness: {
+      documentationComplete: boolean;
+      complianceScore: number; // 0-100
+      missingDocuments: string[];
+      recommendedActions: string[];
+    };
+  };
 }
 
 interface CompensationType {
@@ -682,6 +714,99 @@ interface HistoricalDebt {
     };
   }[];
   lastCalculated: Date;
+}
+```
+
+### MCP Legal Integration
+```typescript
+interface MCPLegalRecommendation {
+  id: string;
+  severity: 'critical' | 'warning' | 'suggestion';
+  category: 'securities' | 'employment' | 'tax' | 'corporate' | 'privacy' | 'contract';
+  jurisdiction: string;
+  title: string;
+  description: string;
+  recommendation: string;
+  implementationSteps: string[];
+  estimatedCost?: string;
+  timeline?: string;
+  legalReferences: string[];
+  mcpConfidence: number; // 0-100
+  lastUpdated: Date;
+  status: 'pending' | 'acknowledged' | 'implemented' | 'dismissed';
+}
+
+interface LegalFootprint {
+  userId: string;
+  primaryJurisdiction: string;
+  additionalJurisdictions: string[];
+  entityType?: 'individual' | 'corporation' | 'llc' | 'partnership' | 'trust' | 'other';
+  taxResidency: string[];
+  regulatoryClassifications: {
+    accreditedInvestor?: boolean;
+    qualifiedInvestor?: boolean;
+    professionalInvestor?: boolean;
+    jurisdiction: string;
+  }[];
+  complianceProfile: {
+    securitiesRegulations: string[];
+    employmentLaws: string[];
+    taxObligations: string[];
+    dataPrivacyRequirements: string[];
+  };
+  lastUpdated: Date;
+}
+
+interface ComplianceAudit {
+  projectId: string;
+  auditDate: Date;
+  auditType: 'self-assessment' | 'third-party' | 'regulatory';
+  scope: string[];
+  findings: {
+    compliant: ComplianceItem[];
+    warnings: ComplianceItem[];
+    violations: ComplianceItem[];
+  };
+  recommendations: MCPLegalRecommendation[];
+  remediation: {
+    requiredActions: string[];
+    optionalImprovements: string[];
+    deadline?: Date;
+  };
+  mcpAnalysis: {
+    overallRisk: 'low' | 'medium' | 'high' | 'critical';
+    keyJurisdictions: string[];
+    primaryConcerns: string[];
+    recommendedStructure?: string;
+  };
+}
+
+interface ComplianceItem {
+  regulation: string;
+  jurisdiction: string;
+  requirement: string;
+  currentStatus: string;
+  evidence?: string[];
+  notes?: string;
+}
+
+interface MCPLegalQuery {
+  queryId: string;
+  projectId: string;
+  queryType: 'structure-analysis' | 'compliance-check' | 'risk-assessment' | 'audit-prep';
+  context: {
+    participants: LegalFootprint[];
+    projectStructure: any; // Relevant project data
+    specificQuestion?: string;
+  };
+  mcpResponse: {
+    analysis: string;
+    recommendations: MCPLegalRecommendation[];
+    riskScore: number;
+    confidence: number;
+    sources: string[];
+    lastUpdated: Date;
+  };
 }
 ```
 
