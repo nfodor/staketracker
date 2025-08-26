@@ -6,12 +6,19 @@ StakeTracker addresses the fundamental challenge of fairly rewarding early-stage
 
 **"How do you fairly track, allocate, and eventually distribute value to contributors in pre-formal projects where traditional equity/compensation structures don't yet exist?"**
 
+### Core Value Proposition:
+**Build Collective Value → Enable Historical Compensation**
+
+The ultimate goal is to create enough measurable value through trackable collective efforts so that when compensation becomes available (through funding, revenue, or other value realization), it flows **first to past contributors** based on their recorded stakes before going to new contributors. This creates a "backpay" system that rewards those who took the earliest risks and built the foundation.
+
 ### Primary Goals:
-1. **Fair Value Attribution**: Ensure all contributions are tracked with transparent, immutable records
-2. **Early Contributor Incentivization**: Reward early risk-takers more than later contributors (anti-inflationary model)
-3. **Network Effect Scaling**: Enable contributors to build sub-teams and distribute stakes hierarchically
-4. **Future-Proof Documentation**: Create verifiable contribution records for eventual legal/financial conversion
-5. **Universal Accessibility**: Allow anyone to create projects and invite contributors without barriers
+1. **Historical Debt Recognition**: Track all past contributions as "compensation debt" to be paid when value materializes
+2. **Fair Value Attribution**: Ensure all contributions are tracked with transparent, immutable records  
+3. **Early Contributor Incentivization**: Reward early risk-takers more than later contributors (anti-inflationary model)
+4. **Collective Value Building**: Focus efforts on creating enough total value to eventually compensate all contributors
+5. **Network Effect Scaling**: Enable contributors to build sub-teams and distribute stakes hierarchically
+6. **Future-Proof Documentation**: Create verifiable contribution records for eventual legal/financial conversion
+7. **Priority Compensation Queue**: When value becomes available, pay historical contributors before new ones
 
 ### Target Use Cases:
 - **Startup Pre-Incorporation**: Track founder and early employee contributions before company formation
@@ -92,12 +99,39 @@ StakeTracker is a system designed to track and record contributions to projects 
 - Later milestones require more pool allocation for equivalent effort
 - This creates natural scarcity and rewards early risk-taking
 
+### Historical Compensation Priority
+- **Backpay Queue**: All past contributions create a "compensation debt" that must be settled first
+- **New Contributor Wait**: Fresh contributors only get paid after historical debt is cleared
+- **Value Threshold**: Projects must generate enough value to start paying historical contributors
+- **Proportional Distribution**: When compensation begins, it's distributed proportionally to stake holdings
+- **Debt-to-Equity Conversion**: Historical stakes convert to formal equity/payments when value materializes
+
 ### Implementation Example
 ```
 Project Pool: 10,000 stakes
 Milestone 1 (Month 1): 1 hour = 10 stakes (1000 stakes available)
-Milestone 5 (Month 5): 1 hour = 5 stakes (500 stakes remaining)
+Milestone 5 (Month 5): 1 hour = 5 stakes (500 stakes remaining) 
 Milestone 10 (Month 10): 1 hour = 2 stakes (200 stakes remaining)
+```
+
+### Historical Compensation Example
+```
+Project reaches $100,000 value after 12 months:
+
+Historical Contributors (Months 1-12):
+- Alice: 500 stakes (5% of total) → Gets $5,000 first
+- Bob: 300 stakes (3% of total) → Gets $3,000 first  
+- Carol: 200 stakes (2% of total) → Gets $2,000 first
+- Total Historical Debt: $10,000 (10% of value)
+
+Remaining Value: $90,000 available for:
+- Current operations
+- New contributor compensation
+- Growth investment
+- Founder/creator distribution
+
+New contributors can only be compensated from the remaining $90,000
+until all historical debt ($10,000) is fully paid.
 ```
 
 ### Relay/Branch System
@@ -491,6 +525,13 @@ interface Project {
   availableStakes: number; // remaining stakes
   createdAt: Date;
   status: 'active' | 'completed' | 'paused';
+  compensation: {
+    totalValue: number; // Current project value in base currency
+    historicalDebt: number; // Total owed to past contributors
+    paidOut: number; // Amount already distributed
+    compensationThreshold: number; // Minimum value needed to start payouts
+    lastValuation: Date;
+  };
 }
 ```
 
@@ -538,6 +579,42 @@ interface RelayPermission {
   usedStakes: number;
   createdAt: Date;
   status: 'active' | 'exhausted' | 'revoked';
+}
+```
+
+### Compensation Tracking
+```typescript
+interface CompensationPayment {
+  id: string;
+  projectId: string;
+  userId: string;
+  stakeAmount: number; // Stakes being compensated
+  paymentAmount: number; // Actual payment value
+  paymentType: 'cash' | 'equity' | 'tokens' | 'other';
+  paymentDate: Date;
+  exchangeRate: number; // Stakes to payment conversion rate
+  status: 'pending' | 'completed' | 'failed';
+  transactionDetails?: {
+    method: string;
+    reference: string;
+    fees?: number;
+  };
+}
+
+interface HistoricalDebt {
+  projectId: string;
+  totalStakesOwed: number;
+  totalValueOwed: number;
+  contributorDebts: {
+    userId: string;
+    stakesOwed: number;
+    valueOwed: number;
+    contributionPeriod: {
+      start: Date;
+      end: Date;
+    };
+  }[];
+  lastCalculated: Date;
 }
 ```
 
