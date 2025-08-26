@@ -91,6 +91,23 @@ StakeTracker is a system designed to track and record contributions to projects 
 - **Proportional Control**: Relay hosts decide how to split their allocated stakes
 - **Network Effects**: Encourages building contributor networks and teams
 
+### 8. Flexible Compensation Conversion System
+- **Project-Defined Conversion Rules**: Each project specifies which compensation types are available
+- **Multiple Value Conversion Options**:
+  - **Revenue-to-Cash**: Stakes convert to cash payments from project revenue
+  - **Investment-to-Equity**: Stakes automatically convert to equity shares when investment occurs
+  - **Token Allocation**: Stakes convert to project-specific tokens
+  - **Hybrid Models**: Combinations of above based on project success milestones
+- **Conversion Triggers**: Automatic or manual conversion based on project settings
+- **Investor-Friendly Options**: Separate investor capital from historical work compensation
+
+### 9. Complete Project Terms Transparency
+- **Full Execution Terms Visible**: All project conditions, compensation rules, and conversion options shown before acceptance
+- **High-Grade Execution Criteria**: Clear definition of what constitutes successful project completion
+- **Stakeholder Management Dashboard**: Comprehensive view of all project participants, roles, and stakes
+- **Terms Evolution Tracking**: Historical record of any changes to project terms
+- **Acceptance Confirmation**: Explicit agreement required for all compensation conversion rules
+
 ## Anti-Inflationary Mechanics
 
 ### Finite Pool Concept
@@ -326,11 +343,13 @@ StakeTracker's design addresses these gaps by providing:
 #### **Essential Features** (High Priority)
 - User management (registration, authentication, profiles)
 - Dual-role system with separate contributor/creator dashboard views
-- Project creation and management
+- Project creation with configurable compensation conversion rules
+- Complete project terms transparency for invitees
+- Contributor invitation system with explicit terms acceptance
 - Basic milestone definition and tracking
 - Simple stake allocation and visualization
-- Email-based invitation system
-- Basic contribution type dictionary
+- Compensation type configuration (revenue-cash, investment-equity, tokens)
+- Project management dashboard with stakeholder overview
 - Dashboard role switching between "My Contributions" and "My Projects"
 
 #### **Success Criteria**:
@@ -525,13 +544,61 @@ interface Project {
   availableStakes: number; // remaining stakes
   createdAt: Date;
   status: 'active' | 'completed' | 'paused';
+  
+  // Compensation Configuration
+  compensationRules: {
+    availableConversions: CompensationType[];
+    defaultConversion: CompensationType;
+    automaticConversion: boolean;
+    investorProtection: boolean; // Prevents investor funds going to historical work
+    conversionThresholds: {
+      revenueThreshold: number; // Min revenue before cash payouts
+      investmentThreshold: number; // Min investment before equity conversion
+      tokenThreshold: number; // Min project value before token distribution
+    };
+  };
+  
+  // Project Terms & Transparency  
+  executionTerms: {
+    highGradeCompletionCriteria: string;
+    expectedTimeline: number; // months
+    successMetrics: string[];
+    riskFactors: string[];
+    communicationFrequency: string;
+    governanceModel: 'creator-controlled' | 'democratic' | 'delegated';
+  };
+  
+  // Current Financial State
   compensation: {
     totalValue: number; // Current project value in base currency
     historicalDebt: number; // Total owed to past contributors
     paidOut: number; // Amount already distributed
-    compensationThreshold: number; // Minimum value needed to start payouts
     lastValuation: Date;
   };
+  
+  // Terms Evolution
+  termsHistory: ProjectTermsChange[];
+}
+
+interface CompensationType {
+  type: 'revenue-cash' | 'investment-equity' | 'token-allocation' | 'profit-share' | 'hybrid';
+  enabled: boolean;
+  conversionRate?: number; // stakes to value conversion
+  minimumThreshold?: number;
+  automaticTrigger?: boolean;
+  investorFriendly: boolean; // True if doesn't use investor capital
+}
+
+interface ProjectTermsChange {
+  id: string;
+  changeDate: Date;
+  changedBy: string;
+  changeType: 'compensation' | 'execution' | 'governance' | 'timeline';
+  oldValue: any;
+  newValue: any;
+  reason: string;
+  contributorApprovalRequired: boolean;
+  approvalStatus: 'pending' | 'approved' | 'rejected';
 }
 ```
 
@@ -615,6 +682,86 @@ interface HistoricalDebt {
     };
   }[];
   lastCalculated: Date;
+}
+```
+
+### Contributor Agreement & Terms Visibility
+```typescript
+interface ContributorInvitation {
+  id: string;
+  projectId: string;
+  inviterId: string;
+  inviteeEmail: string;
+  milestoneIds: string[];
+  
+  // Full Transparency Package
+  termsPackage: {
+    projectExecutionTerms: Project['executionTerms'];
+    compensationRules: Project['compensationRules'];
+    stakeAllocation: {
+      proposedStakes: number;
+      percentageOfProject: number;
+      currentProjectValue: number;
+      potentialConversions: CompensationScenario[];
+    };
+    riskDisclosures: string[];
+    exitClauses: string[];
+  };
+  
+  // Acceptance Tracking
+  inviteeResponse: {
+    status: 'pending' | 'accepted' | 'rejected' | 'counter-proposed';
+    respondedAt?: Date;
+    acceptedTermsVersion: string;
+    counterProposal?: {
+      requestedChanges: string[];
+      reason: string;
+    };
+    explicitAgreements: {
+      compensationRules: boolean;
+      executionTerms: boolean;
+      riskFactors: boolean;
+      governanceModel: boolean;
+    };
+  };
+}
+
+interface CompensationScenario {
+  scenario: string; // "Project reaches $100K revenue", "Series A investment", etc.
+  stakeConversion: {
+    type: CompensationType['type'];
+    estimatedValue: number;
+    conversionMechanism: string;
+    timeline: string;
+  };
+}
+
+interface ProjectManagementDashboard {
+  projectId: string;
+  stakeholderSummary: {
+    totalContributors: number;
+    activeContributors: number;
+    pendingInvitations: number;
+    relayHosts: number;
+  };
+  
+  stakeDistribution: {
+    totalAllocated: number;
+    totalRemaining: number;
+    distributionByType: {
+      directContribution: number;
+      relayDistribution: number;
+      reservedForFuture: number;
+    };
+  };
+  
+  executionHealth: {
+    milestonesCompleted: number;
+    milestonesTotal: number;
+    onTrackForCriteria: boolean;
+    riskFactorsRealized: string[];
+    lastUpdate: Date;
+  };
 }
 ```
 
